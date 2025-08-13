@@ -20,7 +20,7 @@ export default function HeroSection() {
       <div className="relative z-10 text-center text-gray-800 max-w-4xl mx-auto px-4">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">Step Into Style</h1>
         <p className="text-xl md:text-2xl mb-8 text-gray-900">
-          Discover premium shoes and men's clothing that define your stride
+          Discover premium shoes and mens clothing that define your stride
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" className="text-lg px-8 py-3 bg-blue-700 text-white font-bold hover:bg-blue-300 hover:text-gray-900">

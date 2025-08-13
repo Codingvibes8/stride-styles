@@ -5,14 +5,15 @@ import { persist } from "zustand/middleware"
 import type { CartItem, Product } from "@/lib/types"
 
 interface CartStore {
-  items: CartItem[]
-  isLoading: boolean
-  addItem: (product: Product, size: string, color: string, quantity?: number) => void
-  removeItem: (itemId: string) => void
-  updateQuantity: (itemId: string, quantity: number) => void
-  clearCart: () => void
-  getTotalPrice: () => number
-  getTotalItems: () => number
+    items: CartItem[]
+    isLoading: boolean
+
+    addItem: (product: Product, size: string, color: string, quantity?: number) => void
+    removeItem: (itemId: string) => void
+    updateQuantity: (itemId: string, quantity: number) => void
+    clearCart: () => void
+    getTotalPrice: () => number
+    getTotalItems: () => number
 }
 
 export const useCart = create<CartStore>()(

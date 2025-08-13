@@ -77,7 +77,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Shop by Category</h2>
-            <p className="text-lg text-muted-foreground">Find exactly what you're looking for</p>
+            <p className="text-lg text-muted-foreground">Find exactly what you are looking for</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -95,7 +95,7 @@ export default async function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-gray-700 to-gray-900"></div>
               <div className="relative z-10 h-full flex items-center justify-center text-white">
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold mb-2">Men's Clothing</h3>
+                  <h3 className="text-2xl font-bold mb-2">Mens Clothing</h3>
                   <p className="text-gray-300">Elevate your wardrobe</p>
                 </div>
               </div>
