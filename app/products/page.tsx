@@ -1,13 +1,10 @@
+"use client";
+
 import type { Product } from "@/lib/types"
 import ProductCard from "@/components/product-card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { mockFeaturedProducts } from "@/constants/featured-products-constants";
-
-interface ProductsPageProps {
-  searchParams?: {
-    [key: string]: string | string[] | undefined
-  }
-}
+import { useSearchParams, useRouter } from "next/navigation";
 
 function getProducts(category?: string, sort?: string): Product[] {
   let filteredProducts = [...mockFeaturedProducts];
@@ -35,15 +32,26 @@ function getProducts(category?: string, sort?: string): Product[] {
   return filteredProducts;
 }
 
-function getSingleParam(param: string | string[] | undefined): string | undefined {
-  return Array.isArray(param) ? param[0] : param;
-}
+export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
-  const category = getSingleParam(searchParams?.category) || "all";
-  const sort = getSingleParam(searchParams?.sort) || "newest";
+  const category = searchParams.get('category') || "all";
+  const sort = searchParams.get('sort') || "newest";
 
   const products = getProducts(category, sort);
+
+  const handleCategoryChange = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('category', value);
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSortChange = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('sort', value);
+    router.push(`?${params.toString()}`);
+  };
 
   return (
       <div className="container mx-auto px-4 py-8">
@@ -54,7 +62,7 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
           </div>
 
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Select defaultValue={category}>
+            <Select value={category} onValueChange={handleCategoryChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -65,7 +73,7 @@ export default function ProductsPage({ searchParams }: ProductsPageProps) {
               </SelectContent>
             </Select>
 
-            <Select defaultValue={sort}>
+            <Select value={sort} onValueChange={handleSortChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
