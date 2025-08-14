@@ -1,8 +1,15 @@
 "use client";
 
-import type { Product } from "@/lib/types"
-import ProductCard from "@/components/product-card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Suspense } from "react";
+import type { Product } from "@/lib/types";
+import ProductCard from "@/components/product-card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { mockFeaturedProducts } from "@/constants/featured-products-constants";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -26,30 +33,31 @@ function getProducts(category?: string, sort?: string): Product[] {
       filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
       break;
     default:
+      // "newest" or other values fall back to the original order
       break;
   }
 
   return filteredProducts;
 }
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const category = searchParams.get('category') || "all";
-  const sort = searchParams.get('sort') || "newest";
+  const category = searchParams.get("category") || "all";
+  const sort = searchParams.get("sort") || "newest";
 
   const products = getProducts(category, sort);
 
   const handleCategoryChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('category', value);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("category", value);
     router.push(`?${params.toString()}`);
   };
 
   const handleSortChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('sort', value);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", value);
     router.push(`?${params.toString()}`);
   };
 
@@ -90,7 +98,9 @@ export default function ProductsPage() {
         {products.length === 0 ? (
             <div className="text-center py-16">
               <h2 className="text-2xl font-semibold mb-4">No products found</h2>
-              <p className="text-muted-foreground">Try adjusting your filters or search terms.</p>
+              <p className="text-muted-foreground">
+                Try adjusting your filters or search terms.
+              </p>
             </div>
         ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -100,5 +110,20 @@ export default function ProductsPage() {
             </div>
         )}
       </div>
-  )
+  );
+}
+
+export default function ProductsPage() {
+  return (
+      <Suspense
+          fallback={
+            <div className="container mx-auto px-4 py-8">
+              <h1 className="text-3xl font-bold mb-2">All Products</h1>
+              <p className="text-muted-foreground">Loading products...</p>
+            </div>
+          }
+      >
+        <ProductsPageContent />
+      </Suspense>
+  );
 }
