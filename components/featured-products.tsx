@@ -1,13 +1,15 @@
-import type { Product } from "@/lib/types"
 import ProductCard from "./product-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { supabase } from "@/lib/supabase"
 
-interface FeaturedProductsProps {
-  products: Product[]
-}
+export default async function FeaturedProducts() {
+  const { data: products, error } = await supabase.from("products").select("*").eq("featured", true).limit(4)
 
-export default function FeaturedProducts({ products }: FeaturedProductsProps) {
+  if (error) {
+    console.error("Error fetching featured products:", error)
+    return null
+  }
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
