@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { ClerkProvider } from "@clerk/nextjs"
 import Header from "@/components/header"
 import "./globals.css"
 
@@ -29,6 +28,7 @@ export const metadata: Metadata = {
     title: "Stride & Style - Premium Shoes & Men's Clothing",
     description: "Discover premium shoes and men's clothing at Stride & Style.",
   },
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -37,13 +37,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <Header />
-          <main>{children}</main>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <Header />
+        <main>{children}</main>
+      </body>
+    </html>
   )
 }

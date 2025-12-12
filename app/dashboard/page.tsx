@@ -1,39 +1,19 @@
 "use client"
 
-import { useUser } from "@clerk/nextjs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ShoppingBag, Heart, User, Package } from "lucide-react"
+import { useCart } from "@/hooks/use-cart"
 
 export default function DashboardPage() {
-  const { user, isLoaded } = useUser()
-
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Please sign in to access your dashboard</h1>
-        <Button asChild>
-          <Link href="/sign-in">Sign In</Link>
-        </Button>
-      </div>
-    )
-  }
+  const { getTotalItems } = useCart()
+  const totalCartItems = getTotalItems()
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">
-          Welcome back, {user.firstName || user.emailAddresses[0].emailAddress}!
-        </h1>
+        <h1 className="text-3xl font-bold mb-2">Welcome to Your Dashboard</h1>
         <p className="text-muted-foreground">Manage your account and track your orders</p>
       </div>
 
@@ -55,7 +35,7 @@ export default function DashboardPage() {
             <ShoppingBag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{totalCartItems}</div>
             <p className="text-xs text-muted-foreground">Items in your cart</p>
           </CardContent>
         </Card>
@@ -106,20 +86,18 @@ export default function DashboardPage() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-sm font-medium text-muted-foreground">Email</label>
-              <p className="text-sm">{user.emailAddresses[0].emailAddress}</p>
+              <p className="text-sm">Not authenticated</p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">Name</label>
-              <p className="text-sm">
-                {user.firstName} {user.lastName}
-              </p>
+              <p className="text-sm">Sign in to view your profile</p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-              <p className="text-sm">{new Date(user.createdAt!).toLocaleDateString()}</p>
+              <p className="text-sm">-</p>
             </div>
-            <Button variant="outline" className="w-full">
-              Edit Profile
+            <Button asChild className="w-full">
+              <Link href="/sign-in">Sign In to Your Account</Link>
             </Button>
           </CardContent>
         </Card>

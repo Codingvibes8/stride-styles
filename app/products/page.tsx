@@ -1,38 +1,40 @@
-import ProductCard from "@/components/product-card";
-import { supabase } from "@/lib/supabase";
-import ProductsPageClient from "./products-page-client";
+import { Suspense } from "react"
+import ProductsClient from "@/components/products-client"
+import ProductsLoading from "@/components/products-loading"
+import { getAllProducts, getProductsByCategory } from "@/lib/products"
 
-export default async function ProductsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const category = searchParams.category as string || "all";
-  const sort = searchParams.sort as string || "newest";
+interface ProductsPageProps {
+  searchParams: {
+    category?: string
+    sort?: string
+    page?: string
+  }
+}
 
-  let query = supabase.from("products").select("*");
-
+async function getProducts(category?: string) {
   if (category && category !== "all") {
-    query = query.eq("category", category);
+    return await getProductsByCategory(category)
   }
+  return await getAllProducts()
+}
 
-  switch (sort) {
-    case "price-asc":
-      query = query.order("price", { ascending: true });
-      break;
-    case "price-desc":
-      query = query.order("price", { ascending: false });
-      break;
-    case "name":
-      query = query.order("name", { ascending: true });
-      break;
-    default:
-      query = query.order("created_at", { ascending: false });
-      break;
-  }
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  const category = searchParams.category || "all"
+  const sort = searchParams.sort || "newest"
 
-  const { data: products, error } = await query;
+  const products = await getProducts(category)
 
-  if (error) {
-    console.error("Error fetching products:", error);
-    return <div>Error loading products.</div>;
-  }
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <Suspense fallback={<ProductsLoading />}>
+        <ProductsClient initialProducts={products} initialCategory={category} initialSort={sort} />
+      </Suspense>
+    </div>
+  )
+}
 
-  return <ProductsPageClient products={products} />;
+export const metadata = {
+  title: "All Products - Stride & Style",
+  description:
+    "Browse our complete collection of premium shoes and men's clothing. Find the perfect style for every occasion.",
 }
