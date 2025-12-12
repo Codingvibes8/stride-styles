@@ -15,6 +15,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export const supabase = isSupabaseConfigured ? createClient(supabaseUrl!, supabaseAnonKey!) : null
 
+export const createBrowserClient = () => {
+  if (!isSupabaseConfigured || !supabaseUrl || !supabaseAnonKey) {
+    console.warn("Supabase environment variables are not set.")
+    throw new Error("Supabase is not configured. Please set environment variables.")
+  }
+
+  return createClient(supabaseUrl, supabaseAnonKey)
+}
+
 export const createServerClient = cache(() => {
   if (!isSupabaseConfigured || !supabaseUrl || !supabaseAnonKey) {
     console.warn("Supabase environment variables are not set. Using dummy client.")

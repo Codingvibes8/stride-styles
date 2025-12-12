@@ -111,11 +111,11 @@ export default function CartPage() {
                 <span>{formatPrice(totalPrice * 1.08)}</span>
               </div>
 
-              <Button className="w-full" size="lg">
-                Proceed to Checkout
+              <Button asChild className="w-full" size="lg">
+                <Link href="/checkout">Proceed to Checkout</Link>
               </Button>
 
-              <p className="text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
+              <p className="text-xs text-muted-foreground text-center">Secure checkout with order tracking</p>
             </CardContent>
           </Card>
         </div>
