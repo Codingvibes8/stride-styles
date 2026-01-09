@@ -4,6 +4,8 @@ import FeaturedProducts from "@/components/featured-products"
 import { getFeaturedProducts } from "@/lib/products"
 import { isSupabaseConfigured } from "@/lib/supabase"
 
+export const dynamic = "force-dynamic"
+
 export default async function HomePage() {
   if (!isSupabaseConfigured) {
     return (

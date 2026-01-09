@@ -3,6 +3,8 @@ import ProductsClient from "@/components/products-client"
 import ProductsLoading from "@/components/products-loading"
 import { getAllProducts, getProductsByCategory } from "@/lib/products"
 
+export const dynamic = "force-dynamic"
+
 interface ProductsPageProps {
   searchParams: {
     category?: string
