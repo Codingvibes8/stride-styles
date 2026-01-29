@@ -1,10 +1,14 @@
-import ProductCard from "@/components/product-card";
-import { supabase } from "@/lib/supabase";
+import { createServerClient } from "@/lib/supabase";
 import ProductsPageClient from "./products-page-client";
 
-export default async function ProductsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const category = searchParams.category as string || "all";
-  const sort = searchParams.sort as string || "newest";
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { category?: string; sort?: string };
+}) {
+  const supabase = createServerClient();
+  const category = searchParams.category || "all";
+  const sort = searchParams.sort || "newest";
 
   let query = supabase.from("products").select("*");
 

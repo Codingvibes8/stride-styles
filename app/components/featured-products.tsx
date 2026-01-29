@@ -1,7 +1,10 @@
 
 import { FC } from 'react';
-import { Product } from '@/types/product';
-import ProductCard from './product-card';
+import ProductCard from '@/components/product-card';
+import { Product } from '@/lib/types';
+
+// Re-export for components that import from here
+export type { Product };
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -23,3 +26,4 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ products }) => {
 };
 
 export default FeaturedProducts;
+

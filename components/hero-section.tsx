@@ -23,13 +23,14 @@ export default function HeroSection() {
           Discover premium shoes and mens clothing that define your stride
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="text-lg px-8 py-3 bg-blue-700 text-white font-bold hover:bg-blue-300 hover:text-gray-900">
+          <Button size="lg" className="text-lg px-8 py-3 bg-blue-700 text-white font-bold hover:bg-blue-300 hover:text-gray-900" asChild>
             <Link href="/products/shoes">Shop Shoes</Link>
           </Button>
           <Button
             size="lg"
             variant="outline"
             className="text-lg px-8 py-3 bg-white/10 border-white text-white hover:bg-white hover:text-black"
+            asChild
           >
             <Link href="/products/clothing">Shop Clothing</Link>
           </Button>

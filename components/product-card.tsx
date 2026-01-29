@@ -1,7 +1,5 @@
 "use client"
-
-import type React from "react"
-
+import { useState, type MouseEvent } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Heart, ShoppingCart } from "lucide-react"
@@ -11,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import type { Product } from "@/lib/types"
 import { formatPrice, generateSlug } from "@/lib/utils"
 import { useCart } from "@/hooks/use-cart"
-import { useState } from "react"
+
 
 interface ProductCardProps {
   product: Product
@@ -89,7 +87,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || "")
   const [selectedColor, setSelectedColor] = useState(product.colors[0] || "")
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
 

@@ -22,15 +22,15 @@ export default function Header() {
 
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-blue-800">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-yellow-200 flex items-center justify-center">
               <Image src={'/euro-badge.svg'} width={30}  height={30} alt={'site-logo'}/>
             </div>
-            <span className="font-bold text-xl hidden sm:block">Stride & Style</span>
+            <span className="font-bold text-xl hidden sm:block text-yellow-200">Stride & Style</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -39,7 +39,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className="text-sm text-white font-medium transition-colors hover:text-primary"
               >
                 {item.name}
               </Link>
