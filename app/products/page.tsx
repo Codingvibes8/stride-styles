@@ -4,11 +4,12 @@ import ProductsPageClient from "./products-page-client";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { category?: string; sort?: string };
+  searchParams: Promise<{ category?: string; sort?: string }>;
 }) {
   const supabase = createServerClient();
-  const category = searchParams.category || "all";
-  const sort = searchParams.sort || "newest";
+  const params = await searchParams;
+  const category = params.category || "all";
+  const sort = params.sort || "newest";
 
   let query = supabase.from("products").select("*");
 

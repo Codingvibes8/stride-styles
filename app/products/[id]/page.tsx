@@ -3,15 +3,16 @@ import { notFound } from "next/navigation";
 import ProductDetailClient from "./product-detail-client";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProductPage({ params }: PageProps) {
+  const { id } = await params;
   // Extract UUID from the slug-id string or use directly if it is just a UUID
   // Assuming ID is the last 36 characters (UUID length)
-  const productId = params.id.length >= 36 ? params.id.slice(-36) : params.id;
+  const productId = id.length >= 36 ? id.slice(-36) : id;
   
   const supabase = createServerClient();
 

@@ -1,6 +1,6 @@
 
 import { FC } from 'react';
-import { Product } from '@/types/product';
+import { Product } from '@/lib/types';
 import ProductCard from './product-card';
 
 interface FeaturedProductsProps {

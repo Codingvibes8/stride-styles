@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -11,8 +12,32 @@ import { formatPrice } from "@/lib/utils"
 
 export default function CartPage() {
   const { items, getTotalPrice, getTotalItems } = useCart()
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
   const totalPrice = getTotalPrice()
   const totalItems = getTotalItems()
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true)
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      })
+
+      const data = await response.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        console.error("Checkout error:", data.error)
+        setIsCheckingOut(false)
+      }
+    } catch (error) {
+      console.error("Checkout error:", error)
+      setIsCheckingOut(false)
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -91,11 +116,21 @@ export default function CartPage() {
                   <span>{formatPrice(totalPrice * 1.08)}</span>
                 </div>
 
-                <Button className="w-full" size="lg">
-                  Proceed to Checkout
+                <Button 
+                  className="w-full" 
+                  size="lg" 
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    "Proceed to Checkout"
+                  )}
                 </Button>
-
-                <p className="text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
               </CardContent>
             </Card>
           </div>
