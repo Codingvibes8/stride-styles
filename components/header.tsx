@@ -30,7 +30,7 @@ export default function Header() {
             <div className="h-8 w-8 rounded-full bg-yellow-200 flex items-center justify-center">
               <Image src={'/euro-badge.svg'} width={30}  height={30} alt={'site-logo'}/>
             </div>
-            <span className="font-bold text-xl hidden sm:block text-yellow-200">Stride & Style</span>
+            <span className="font-bold text-xl text-yellow-200">Stride & Style</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -49,14 +49,14 @@ export default function Header() {
           {/* Right side actions */}
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
+            <Button variant="ghost" size="icon" className="hidden sm:flex text-white hover:text-white/80">
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>
 
             {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-white hover:text-white/80">
                 <ShoppingBag className="h-5 w-5" />
                 {totalItems > 0 && (
                   <Badge
@@ -75,7 +75,7 @@ export default function Header() {
               <UserButton afterSignOutUrl="/" />
             ) : (
               <Link href="/sign-in">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
                   <User className="h-5 w-5" />
                   <span className="sr-only">Account</span>
                 </Button>
@@ -85,7 +85,7 @@ export default function Header() {
             {/* Mobile menu */}
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden text-white hover:text-white/80">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Menu</span>
                 </Button>
