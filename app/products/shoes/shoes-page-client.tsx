@@ -13,22 +13,15 @@ import {
 } from "@/components/ui/select";
 import type { Product } from "@/lib/types";
 
-interface ProductsPageClientProps {
+interface ShoesPageClientProps {
   products: Product[];
 }
 
-export default function ProductsPageClient({ products }: ProductsPageClientProps) {
+export default function ShoesPageClient({ products }: ShoesPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const category = searchParams.get("category") || "all";
   const sort = searchParams.get("sort") || "newest";
-
-  const handleCategoryChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("category", value);
-    router.push(`?${params.toString()}`);
-  };
 
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,29 +38,20 @@ export default function ProductsPageClient({ products }: ProductsPageClientProps
           Home
         </Link>
         <ChevronRight className="h-4 w-4" />
-        <span className="text-foreground font-medium">Products</span>
+        <Link href="/products" className="hover:text-primary transition-colors">Products</Link>
+        <ChevronRight className="h-4 w-4" />
+        <span className="text-foreground font-medium">Shoes</span>
       </nav>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">All Products</h1>
+          <h1 className="text-3xl font-bold mb-2">Shop Shoes</h1>
           <p className="text-muted-foreground">
-            Showing {products.length} products
+            Showing {products.length} {products.length === 1 ? "product" : "products"}
           </p>
         </div>
 
         <div className="flex items-center space-x-4 mt-4 md:mt-0">
-          <Select value={category} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="shoes">Shoes</SelectItem>
-              <SelectItem value="clothing">Clothing</SelectItem>
-            </SelectContent>
-          </Select>
-
           <Select value={sort} onValueChange={handleSortChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Sort by" />
@@ -84,9 +68,9 @@ export default function ProductsPageClient({ products }: ProductsPageClientProps
 
       {products.length === 0 ? (
         <div className="text-center py-16">
-          <h2 className="text-2xl font-semibold mb-4">No products found</h2>
+          <h2 className="text-2xl font-semibold mb-4">No shoes found</h2>
           <p className="text-muted-foreground">
-            Try adjusting your filters or search terms.
+            Check back soon for new arrivals!
           </p>
         </div>
       ) : (
@@ -99,12 +83,3 @@ export default function ProductsPageClient({ products }: ProductsPageClientProps
     </div>
   );
 }
-
-
-{/*This is a client-side React component,
- It renders a product listing page that displays a grid of products.
-  The component includes dropdowns for filtering products by category
-   and sorting them.
-    These filtering and sorting states are managed through
-    URL query parameters,
-     allowing for shareable and bookmarking page states*/}

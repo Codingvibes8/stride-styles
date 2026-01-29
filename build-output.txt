@@ -1,0 +1,44 @@
+
+> strideandstyle@0.1.0 build
+> next build
+
+   Ôû▓ Next.js 15.3.3
+   - Environments: .env
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 5.0s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/13) ...
+   Generating static pages (3/13) 
+   Generating static pages (6/13) 
+   Generating static pages (9/13) 
+ Ô£ô Generating static pages (13/13)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+Ôöî Ôùï /                                    3.32 kB         124 kB
+Ôö£ Ôùï /_not-found                            977 B         102 kB
+Ôö£ ãÆ /api/checkout                          136 B         101 kB
+Ôö£ Ôùï /cart                                4.01 kB         125 kB
+Ôö£ Ôùï /checkout/cancel                     1.98 kB         116 kB
+Ôö£ Ôùï /checkout/success                    3.55 kB         118 kB
+Ôö£ Ôùï /dashboard                           2.59 kB         145 kB
+Ôö£ ãÆ /products                            1.05 kB         151 kB
+Ôö£ ãÆ /products/[id]                       4.01 kB         121 kB
+Ôö£ ãÆ /products/clothing                   1.01 kB         151 kB
+Ôö£ ãÆ /products/shoes                         1 kB         151 kB
+Ôö£ ãÆ /sign-in/[[...signin]]                 562 B         137 kB
+Ôöö ãÆ /sign-up/[[...sign-up]]                562 B         137 kB
++ First Load JS shared by all             101 kB
+  Ôö£ chunks/4bd1b696-881b4a09dde61fef.js  53.2 kB
+  Ôö£ chunks/684-1714c3388f22aab2.js       45.9 kB
+  Ôöö other shared chunks (total)          2.03 kB
+
+
+ãÆ Middleware                               80 kB
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

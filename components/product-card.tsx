@@ -155,7 +155,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           setSelectedColor={setSelectedColor}
         />
 
-        <Button className="w-full" onClick={handleAddToCart} disabled={isLoading || !selectedSize || !selectedColor}>
+        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" onClick={handleAddToCart} disabled={isLoading || !selectedSize || !selectedColor}>
           <ShoppingCart className="h-4 w-4 mr-2" />
           {isLoading ? "Adding..." : "Add to Cart"}
         </Button>

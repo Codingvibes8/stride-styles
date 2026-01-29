@@ -213,7 +213,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             </div>
 
             <Button
-              className="flex-1 h-12 text-lg"
+              className="flex-1 h-12 text-lg bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
               size="lg"
               onClick={handleAddToCart}
               disabled={isLoading || !selectedSize || !selectedColor}
