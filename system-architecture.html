@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stride & Style - System Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0d0d1f 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px rgba(129, 140, 248, 0.3));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px rgba(192, 132, 252, 0.5));
+            }
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.frontend {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .legend-dot.backend {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .legend-dot.database {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .legend-dot.external {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+
+        .legend-dot.security {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+
+        .legend-dot.infra {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+        }
+
+        /* Architecture Diagram Container */
+        .architecture {
+            position: relative;
+            min-height: 900px;
+            padding: 40px;
+        }
+
+        /* SVG for connections */
+        .connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            stroke: rgba(99, 102, 241, 0.4);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 8, 4;
+            animation: flowAnimation 2s linear infinite;
+        }
+
+        .connection-line.data-flow {
+            stroke: rgba(16, 185, 129, 0.5);
+        }
+
+        .connection-line.auth-flow {
+            stroke: rgba(239, 68, 68, 0.5);
+        }
+
+        .connection-line.payment-flow {
+            stroke: rgba(139, 92, 246, 0.5);
+        }
+
+        @keyframes flowAnimation {
+            0% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: -24;
+            }
+        }
+
+        /* Component Nodes */
+        .node {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            z-index: 10;
+            min-width: 200px;
+        }
+
+        .node:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .node-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .node-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .node-subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .node-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tech-tag {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Node Types */
+        .node.frontend {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .node.frontend .node-icon {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .node.frontend:hover {
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .node.backend {
+            border-left: 4px solid #10b981;
+        }
+
+        .node.backend .node-icon {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .node.backend:hover {
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+        }
+
+        .node.database {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .node.database .node-icon {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .node.database:hover {
+            box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
+        }
+
+        .node.external {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .node.external .node-icon {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+
+        .node.external:hover {
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+        }
+
+        .node.security {
+            border-left: 4px solid #ef4444;
+        }
+
+        .node.security .node-icon {
+            background: linear-gradient(135deg, #ef4444, #f87171);
+        }
+
+        .node.security:hover {
+            box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3);
+        }
+
+        .node.infra {
+            border-left: 4px solid #06b6d4;
+        }
+
+        .node.infra .node-icon {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+        }
+
+        .node.infra:hover {
+            box-shadow: 0 20px 60px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Node Positions */
+        .node-users {
+            left: 5%;
+            top: 380px;
+        }
+
+        .node-cdn {
+            left: 25%;
+            top: 100px;
+        }
+
+        .node-frontend {
+            left: 38%;
+            top: 250px;
+        }
+
+        .node-admin {
+            left: 65%;
+            top: 100px;
+        }
+
+        .node-backend {
+            left: 55%;
+            top: 380px;
+        }
+
+        .node-auth {
+            left: 75%;
+            top: 250px;
+        }
+
+        .node-database {
+            left: 38%;
+            top: 550px;
+        }
+
+        .node-stripe {
+            left: 75%;
+            top: 550px;
+        }
+
+        .node-logging {
+            left: 55%;
+            top: 720px;
+        }
+
+        /* Floating Animation */
+        .node {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .node:nth-child(odd) {
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .node:hover {
+            animation: none;
+        }
+
+        /* Data Flow Labels */
+        .flow-label {
+            position: absolute;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        /* Pulse Animation for Active Nodes */
+        .node-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            animation: pulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Info Panel */
+        .info-panel {
+            margin-top: 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .info-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 2;
+        }
+
+        .info-card li::before {
+            content: "→";
+            color: #818cf8;
+            margin-right: 10px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .architecture {
+                min-height: 1200px;
+            }
+
+            .node {
+                min-width: 160px;
+                padding: 16px;
+            }
+
+            .node-title {
+                font-size: 1rem;
+            }
+
+            .node-users {
+                left: 2%;
+                top: 50px;
+            }
+
+            .node-cdn {
+                left: 35%;
+                top: 50px;
+            }
+
+            .node-frontend {
+                left: 68%;
+                top: 50px;
+            }
+
+            .node-admin {
+                left: 2%;
+                top: 250px;
+            }
+
+            .node-backend {
+                left: 35%;
+                top: 250px;
+            }
+
+            .node-auth {
+                left: 68%;
+                top: 250px;
+            }
+
+            .node-database {
+                left: 2%;
+                top: 450px;
+            }
+
+            .node-stripe {
+                left: 35%;
+                top: 450px;
+            }
+
+            .node-logging {
+                left: 68%;
+                top: 450px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .legend {
+                gap: 15px;
+            }
+
+            .node {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                margin: 20px auto;
+                max-width: 300px;
+            }
+
+            .connections-svg {
+                display: none;
+            }
+
+            .architecture {
+                min-height: auto;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏃‍♀️ Stride & Style</h1>
+            <p>System Architecture Diagram — E-commerce Platform</p>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot frontend"></div>
+                <span>Frontend</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot backend"></div>
+                <span>Backend</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot database"></div>
+                <span>Database</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot external"></div>
+                <span>External Services</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot security"></div>
+                <span>Security/Auth</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot infra"></div>
+                <span>Infrastructure</span>
+            </div>
+        </div>
+
+        <!-- Architecture Diagram -->
+        <div class="architecture">
+            <!-- SVG Connections -->
+            <svg class="connections-svg" viewBox="0 0 1600 900" preserveAspectRatio="none">
+                <!-- Users to CDN -->
+                <path class="connection-line" d="M 180 420 Q 300 300 420 180" />
+                <!-- CDN to Frontend -->
+                <path class="connection-line" d="M 500 180 L 620 300" />
+                <!-- Frontend to Backend -->
+                <path class="connection-line data-flow" d="M 780 340 L 920 420" />
+                <!-- Backend to Database -->
+                <path class="connection-line data-flow" d="M 880 480 L 700 580" />
+                <!-- Backend to Auth -->
+                <path class="connection-line auth-flow" d="M 1040 400 L 1220 320" />
+                <!-- Backend to Stripe -->
+                <path class="connection-line payment-flow" d="M 1000 480 L 1200 580" />
+                <!-- Admin to Backend -->
+                <path class="connection-line" d="M 1100 200 L 980 380" />
+                <!-- Backend to Logging -->
+                <path class="connection-line" d="M 920 480 L 920 720" />
+                <!-- Auth to Database -->
+                <path class="connection-line auth-flow" d="M 1200 340 Q 1000 500 700 600" />
+                <!-- Frontend to Auth -->
+                <path class="connection-line auth-flow" d="M 780 300 L 1200 300" />
+            </svg>
+
+            <!-- Flow Labels -->
+            <div class="flow-label" style="left: 30%; top: 320px;">Static Assets</div>
+            <div class="flow-label" style="left: 52%; top: 360px;">API Requests</div>
+            <div class="flow-label" style="left: 48%; top: 520px;">CRUD Operations</div>
+            <div class="flow-label" style="left: 72%; top: 350px;">JWT Tokens</div>
+            <div class="flow-label" style="left: 72%; top: 520px;">Payment Processing</div>
+
+            <!-- User Node -->
+            <div class="node infra node-users">
+                <div class="node-pulse"></div>
+                <div class="node-icon">👥</div>
+                <div class="node-title">Users / Customers</div>
+                <div class="node-subtitle">Web & Mobile Browsers</div>
+                <div class="node-tech">
+                    <span class="tech-tag">HTTP/HTTPS</span>
+                    <span class="tech-tag">WebSocket</span>
+                </div>
+            </div>
+
+            <!-- CDN Node -->
+            <div class="node infra node-cdn">
+                <div class="node-pulse"></div>
+                <div class="node-icon">🌐</div>
+                <div class="node-title">CDN</div>
+                <div class="node-subtitle">Content Delivery Network</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Vercel Edge</span>
+                    <span class="tech-tag">Cloudflare</span>
+                    <span class="tech-tag">Static Assets</span>
+                </div>
+            </div>
+
+            <!-- Frontend Node -->
+            <div class="node frontend node-frontend">
+                <div class="node-pulse"></div>
+                <div class="node-icon">⚛️</div>
+                <div class="node-title">Frontend</div>
+                <div class="node-subtitle">Client-Side Application</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Next.js 15</span>
+                    <span class="tech-tag">React 19</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">Tailwind CSS</span>
+                    <span class="tech-tag">Zustand</span>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard Node -->
+            <div class="node frontend node-admin">
+                <div class="node-pulse"></div>
+                <div class="node-icon">📊</div>
+                <div class="node-title">Admin Dashboard</div>
+                <div class="node-subtitle">Management Interface</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">Radix UI</span>
+                    <span class="tech-tag">Charts</span>
+                    <span class="tech-tag">Analytics</span>
+                </div>
+            </div>
+
+            <!-- Backend Node -->
+            <div class="node backend node-backend">
+                <div class="node-pulse"></div>
+                <div class="node-icon">🚀</div>
+                <div class="node-title">Backend API</div>
+                <div class="node-subtitle">Server-Side Logic</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">Next.js API Routes</span>
+                    <span class="tech-tag">REST API</span>
+                    <span class="tech-tag">Server Actions</span>
+                </div>
+            </div>
+
+            <!-- Auth Node -->
+            <div class="node security node-auth">
+                <div class="node-pulse"></div>
+                <div class="node-icon">🔐</div>
+                <div class="node-title">Authentication</div>
+                <div class="node-subtitle">Identity Management</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Clerk</span>
+                    <span class="tech-tag">JWT</span>
+                    <span class="tech-tag">OAuth 2.0</span>
+                    <span class="tech-tag">Sessions</span>
+                </div>
+            </div>
+
+            <!-- Database Node -->
+            <div class="node database node-database">
+                <div class="node-pulse"></div>
+                <div class="node-icon">🗄️</div>
+                <div class="node-title">Database</div>
+                <div class="node-subtitle">Data Persistence Layer</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Supabase</span>
+                    <span class="tech-tag">PostgreSQL</span>
+                    <span class="tech-tag">Real-time</span>
+                    <span class="tech-tag">Row Level Security</span>
+                </div>
+            </div>
+
+            <!-- Payment Node -->
+            <div class="node external node-stripe">
+                <div class="node-pulse"></div>
+                <div class="node-icon">💳</div>
+                <div class="node-title">Payment Gateway</div>
+                <div class="node-subtitle">Payment Processing</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Stripe</span>
+                    <span class="tech-tag">Checkout</span>
+                    <span class="tech-tag">Webhooks</span>
+                    <span class="tech-tag">PCI Compliant</span>
+                </div>
+            </div>
+
+            <!-- Logging Node -->
+            <div class="node infra node-logging">
+                <div class="node-pulse"></div>
+                <div class="node-icon">📈</div>
+                <div class="node-title">Logging & Monitoring</div>
+                <div class="node-subtitle">Observability Stack</div>
+                <div class="node-tech">
+                    <span class="tech-tag">Vercel Analytics</span>
+                    <span class="tech-tag">Sentry</span>
+                    <span class="tech-tag">LogRocket</span>
+                    <span class="tech-tag">Web Vitals</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-card">
+                <h3>🔄 Data Flow</h3>
+                <ul>
+                    <li>Users request pages via CDN</li>
+                    <li>Frontend renders with SSR/SSG</li>
+                    <li>API calls go to Next.js routes</li>
+                    <li>Backend queries Supabase DB</li>
+                    <li>Real-time updates via WebSockets</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🔒 Authentication Flow</h3>
+                <ul>
+                    <li>User signs in via Clerk</li>
+                    <li>JWT token generated & stored</li>
+                    <li>Middleware validates requests</li>
+                    <li>Protected routes enforced</li>
+                    <li>Session synced with Supabase</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>💰 Payment Flow</h3>
+                <ul>
+                    <li>Cart items sent to checkout</li>
+                    <li>Stripe Checkout session created</li>
+                    <li>User redirected to Stripe</li>
+                    <li>Webhook confirms payment</li>
+                    <li>Order stored in database</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>📦 Key Features</h3>
+                <ul>
+                    <li>Server-side rendering (SSR)</li>
+                    <li>Static site generation (SSG)</li>
+                    <li>Edge caching via CDN</li>
+                    <li>Optimistic UI updates</li>
+                    <li>Progressive Web App (PWA)</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🛡️ Security Measures</h3>
+                <ul>
+                    <li>HTTPS everywhere</li>
+                    <li>CORS protection</li>
+                    <li>Rate limiting</li>
+                    <li>Input validation</li>
+                    <li>Row-level security in DB</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>📊 Monitoring</h3>
+                <ul>
+                    <li>Error tracking with Sentry</li>
+                    <li>Performance metrics</li>
+                    <li>User session replay</li>
+                    <li>Core Web Vitals</li>
+                    <li>Uptime monitoring</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Stride & Style System Architecture • Next.js 15 • Supabase • Stripe • Clerk</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">Built with modern e-commerce best practices</p>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('mouseenter', () => {
+                node.style.animation = 'none';
+            });
+
+            node.addEventListener('mouseleave', () => {
+                node.style.animation = '';
+            });
+        });
+
+        // Animate connection lines on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.node, .info-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

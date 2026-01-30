@@ -13,19 +13,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const origin = request.nextUrl.origin;
+
     // Create line items for Stripe Checkout
-    const lineItems = items.map((item) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.product?.name || "Product",
-          description: `Size: ${item.size}, Color: ${item.color}`,
-          images: item.product?.images?.slice(0, 1) || [],
+    const lineItems = items.map((item) => {
+      // Convert relative image paths to absolute URLs for Stripe
+      const images = (item.product?.images || [])
+        .slice(0, 1) // Stripe allows max 8 images, we use 1
+        .map((img: string) => {
+          // If already an absolute URL, use as-is
+          if (img.startsWith("http://") || img.startsWith("https://")) {
+            return img;
+          }
+          // Convert relative path to absolute URL
+          return `${origin}${img.startsWith("/") ? "" : "/"}${img}`;
+        })
+        .filter((url: string) => {
+          // Validate URL format
+          try {
+            new URL(url);
+            return true;
+          } catch {
+            return false;
+          }
+        });
+
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.product?.name || "Product",
+            description: `Size: ${item.size}, Color: ${item.color}`,
+            images,
+          },
+          unit_amount: Math.round((item.product?.price || 0) * 100), // Stripe expects cents
         },
-        unit_amount: Math.round((item.product?.price || 0) * 100), // Stripe expects cents
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      };
+    });
 
     // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({

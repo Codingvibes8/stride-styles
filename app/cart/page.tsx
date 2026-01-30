@@ -117,7 +117,7 @@ export default function CartPage() {
                 </div>
 
                 <Button 
-                  className="w-full" 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white" 
                   size="lg" 
                   onClick={handleCheckout}
                   disabled={isCheckingOut}

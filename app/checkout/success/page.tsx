@@ -27,20 +27,19 @@ export default function CheckoutSuccessPage() {
             </div>
             
             <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              <h1 className="text-2xl font-bold text-gray-900">
                 Payment Successful!
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-gray-800">
                 Thank you for your purchase. Your order has been confirmed and will be shipped soon.
               </p>
             </div>
-
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 text-sm text-muted-foreground">
+            <div className="rounded-lg p-4 text-sm text-muted-foreground bg-green-100">
               <p>A confirmation email has been sent to your email address with order details.</p>
             </div>
 
             <div className="flex flex-col gap-3 pt-4">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
                 <Link href="/products">
                   <ShoppingBag className="mr-2 h-5 w-5" />
                   Continue Shopping
