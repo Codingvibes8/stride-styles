@@ -1,0 +1,55 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Next.js",
+    "Tailwind CSS",
+    "Supabase",
+    "Clerk",
+    "Stripe",
+    "Zustand"
+  ],
+  "features": [
+    {
+      "name": "Authentication",
+      "description": "User sign-in and sign-up functionality using Clerk.",
+      "files": [
+        "app/sign-in/[[...signin]]/page.tsx",
+        "app/sign-up/[[...signup]]/page.tsx",
+        "middleware.ts"
+      ]
+    },
+    {
+      "name": "Product Browsing",
+      "description": "Listing and details views for products.",
+      "files": [
+        "app/products/page.tsx",
+        "app/products/[id]/page.tsx",
+        "app/products/clothing/page.tsx",
+        "app/products/shoes/page.tsx"
+      ]
+    },
+    {
+      "name": "Shopping Cart",
+      "description": "Cart management functionality.",
+      "files": [
+        "app/cart/page.tsx",
+        "components/ui/cart.tsx"
+      ]
+    },
+    {
+      "name": "Checkout",
+      "description": "Checkout process and payment integration (Stripe).",
+      "files": [
+        "app/checkout/page.tsx",
+        "app/api/checkout/route.ts"
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "description": "User dashboard for account management.",
+      "files": [
+        "app/dashboard/page.tsx"
+      ]
+    }
+  ]
+}
