@@ -31,7 +31,14 @@ export default async function ShoesPage({
 
   if (error) {
     console.error("Error fetching shoes:", error);
-    return <div>Error loading products.</div>;
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h2 className="text-xl font-semibold mb-2">Unable to load products</h2>
+        <p className="text-muted-foreground text-sm">
+          We&apos;re having trouble connecting to our database. Please try again later.
+        </p>
+      </div>
+    );
   }
 
   return <ShoesPageClient products={products || []} />;

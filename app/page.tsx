@@ -19,6 +19,13 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      {error && (
+        <div className="container mx-auto px-4 py-4">
+          <div className="rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+            Featured products are temporarily unavailable. Please check back soon.
+          </div>
+        </div>
+      )}
       <FeaturedProducts products={products || []} />
 
       {/* Categories Section */}
