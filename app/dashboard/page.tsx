@@ -1,15 +1,15 @@
 "use client"
 
-import { useUser } from "@clerk/nextjs"
+import { useAuth } from "@/components/auth-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ShoppingBag, Heart, User, Package } from "lucide-react"
 
 export default function DashboardPage() {
-  const { user, isLoaded } = useUser()
+  const { user, isLoading } = useAuth()
 
-  if (!isLoaded) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
@@ -28,11 +28,16 @@ export default function DashboardPage() {
     )
   }
 
+  const userEmail = user.email || ""
+  const firstName = user.user_metadata?.first_name || ""
+  const lastName = user.user_metadata?.last_name || ""
+  const displayName = firstName || userEmail
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">
-          Welcome back, {user.firstName || user.emailAddresses[0].emailAddress}!
+          Welcome back, {displayName}!
         </h1>
         <p className="text-muted-foreground">Manage your account and track your orders</p>
       </div>
@@ -106,17 +111,17 @@ export default function DashboardPage() {
           <CardContent className="space-y-4">
             <div>
               <label className="text-sm font-medium text-muted-foreground">Email</label>
-              <p className="text-sm">{user.emailAddresses[0].emailAddress}</p>
+              <p className="text-sm">{userEmail}</p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">Name</label>
               <p className="text-sm">
-                {user.firstName} {user.lastName}
+                {firstName} {lastName}
               </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-              <p className="text-sm">{new Date(user.createdAt!).toLocaleDateString()}</p>
+              <p className="text-sm">{new Date(user.created_at).toLocaleDateString()}</p>
             </div>
             <Button variant="outline" className="w-full">
               Edit Profile

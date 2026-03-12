@@ -2,24 +2,30 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { ShoppingBag, Search, Menu, User } from "lucide-react"
+import { ShoppingBag, Search, Menu, User, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/hooks/use-cart"
-import { UserButton, useUser } from "@clerk/nextjs"
+import { useAuth } from "@/components/auth-context"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import {navigation} from "@/constants/navigation-constants"
-
-
+import { navigation } from "@/constants/navigation-constants"
 
 export default function Header() {
   const { getTotalItems } = useCart()
-  const { isSignedIn } = useUser()
+  const { user, isLoading, signOut } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const totalItems = getTotalItems()
+  const router = useRouter()
 
+  const isSignedIn = !!user
 
+  const handleSignOut = async () => {
+    await signOut()
+    router.push("/")
+    router.refresh()
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-blue-800">
@@ -28,9 +34,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-full bg-yellow-200 flex items-center justify-center">
-              <Image src={'/euro-badge.svg'} width={30}  height={30} alt={'site-logo'}/>
+              <Image src={'/euro-badge.svg'} width={30} height={30} alt={'site-logo'}/>
             </div>
-            <span className="font-bold text-xl text-yellow-200">Stride & Style</span>
+            <span className="font-bold text-xl text-yellow-200">Stride &amp; Style</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -72,7 +78,25 @@ export default function Header() {
 
             {/* User Account */}
             {isSignedIn ? (
-              <UserButton afterSignOutUrl="/" />
+              <div className="flex items-center space-x-2">
+                <Link href="/dashboard">
+                  <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
+                    <div className="h-7 w-7 rounded-full bg-yellow-200 flex items-center justify-center text-blue-800 font-bold text-sm">
+                      {user.email?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <span className="sr-only">Dashboard</span>
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:text-white/80"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">Sign Out</span>
+                </Button>
+              </div>
             ) : (
               <Link href="/sign-in">
                 <Button variant="ghost" size="icon" className="text-white hover:text-white/80">
@@ -104,13 +128,24 @@ export default function Header() {
                   ))}
                   <div className="pt-4 border-t">
                     {isSignedIn ? (
-                      <Link
-                        href="/dashboard"
-                        className="text-lg font-medium transition-colors hover:text-primary"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Dashboard
-                      </Link>
+                      <>
+                        <Link
+                          href="/dashboard"
+                          className="text-lg font-medium transition-colors hover:text-primary block mb-4"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Dashboard
+                        </Link>
+                        <button
+                          className="text-lg font-medium text-red-500 transition-colors hover:text-red-600"
+                          onClick={() => {
+                            handleSignOut()
+                            setIsMenuOpen(false)
+                          }}
+                        >
+                          Sign Out
+                        </button>
+                      </>
                     ) : (
                       <Link
                         href="/sign-in"
