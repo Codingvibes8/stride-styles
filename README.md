@@ -94,7 +94,22 @@ AUTH_SECRET="a-long-random-string"
 # Stripe
 STRIPE_SECRET_KEY=your_stripe_secret_key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+# Account guarded against in the provisioning script
+STRIPE_ACCT_ID=acct_your_account_id
 ```
+
+### Stripe
+
+Authenticate the CLI with the target account, then sync the catalog:
+
+```bash
+stripe login                 # select the account, e.g. Stride&Style
+npm run stripe:provision     # creates/updates 16 products + USD prices
+```
+
+The script is idempotent (matches products by `metadata.item_key`), refuses to
+write to an account other than `STRIPE_ACCT_ID`, and writes the resulting IDs to
+`stripe-catalog.json`.
 
 ### Database
 
@@ -175,6 +190,7 @@ npm start
 | `npm run db:push` | Push the schema directly (no migration files) |
 | `npm run db:seed` | Insert demo products (`-- --reset` to replace) |
 | `npm run db:studio` | Open Drizzle Studio |
+| `npm run stripe:provision` | Sync the catalog into Stripe products + prices |
 
 ---
 

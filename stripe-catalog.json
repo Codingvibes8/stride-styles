@@ -1,0 +1,135 @@
+{
+  "accountId": "acct_1Uct7APnkwbIA9hV",
+  "mode": "test",
+  "generatedAt": "2026-11-17T20:53:22.108Z",
+  "products": [
+    {
+      "itemKey": "air-stride-pro",
+      "name": "Air Stride Pro",
+      "amount": 12999,
+      "productId": "prod_VeBkPP0liZDvVE",
+      "priceId": "price_1UctN9PnkwbIA9hV2vuOwiWt",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "urban-walker",
+      "name": "Urban Walker",
+      "amount": 8999,
+      "productId": "prod_VeBkfPk1HDQgle",
+      "priceId": "price_1UctNAPnkwbIA9hVdnypAMaM",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "trailblaze-x",
+      "name": "TrailBlaze X",
+      "amount": 14999,
+      "productId": "prod_VeBkOLf0rKNLWP",
+      "priceId": "price_1UctNAPnkwbIA9hVVpt7amov",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "classic-court-low",
+      "name": "Classic Court Low",
+      "amount": 6999,
+      "productId": "prod_VeBkRE4J07ASoV",
+      "priceId": "price_1UctNBPnkwbIA9hVkQd17WFf",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "flex-sprint-2",
+      "name": "Flex Sprint 2",
+      "amount": 19999,
+      "productId": "prod_VeBkK83ILyAxbX",
+      "priceId": "price_1UctNCPnkwbIA9hVqKQSnTbB",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "hike-masters",
+      "name": "Hike Masters",
+      "amount": 17499,
+      "productId": "prod_VeBkV7s8eWf17s",
+      "priceId": "price_1UctNDPnkwbIA9hVK9n1vxMv",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "levis-501-original-jeans",
+      "name": "Levi's 501 Original Jeans",
+      "amount": 8999,
+      "productId": "prod_VeBkrb0fhpdtkJ",
+      "priceId": "price_1UctNEPnkwbIA9hVNni6zMr9",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "nike-dri-fit-t-shirt",
+      "name": "Nike Dri-FIT T-Shirt",
+      "amount": 2499,
+      "productId": "prod_VeBk63YkADVMmO",
+      "priceId": "price_1UctNFPnkwbIA9hVSVZ2UJKu",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "patagonia-better-sweater-fleece",
+      "name": "Patagonia Better Sweater Fleece",
+      "amount": 11999,
+      "productId": "prod_VeBkGlG6pQx5YY",
+      "priceId": "price_1UctNFPnkwbIA9hV7YhiOZMy",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "nike-air-max-270",
+      "name": "Nike Air Max 270",
+      "amount": 12999,
+      "productId": "prod_VeBkYEHSMXAD4r",
+      "priceId": "price_1UctNGPnkwbIA9hVYo3HD2iK",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "adidas-ultraboost-22",
+      "name": "Adidas Ultraboost 22",
+      "amount": 18999,
+      "productId": "prod_VeBkXFbaTlEA2F",
+      "priceId": "price_1UctNHPnkwbIA9hVC3hsSykW",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "converse-chuck-taylor-all-star",
+      "name": "Converse Chuck Taylor All Star",
+      "amount": 5999,
+      "productId": "prod_VeBk7xP46kxEsn",
+      "priceId": "price_1UctNIPnkwbIA9hVhCAoiCEP",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "timberland-6-inch-premium-boot",
+      "name": "Timberland 6-Inch Premium Boot",
+      "amount": 19999,
+      "productId": "prod_VeBkdIUomY1uDC",
+      "priceId": "price_1UctNJPnkwbIA9hV4UAmYlgv",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "ralph-lauren-polo-shirt",
+      "name": "Ralph Lauren Polo Shirt",
+      "amount": 7999,
+      "productId": "prod_VeBk3hfWxJfk7P",
+      "priceId": "price_1UctNJPnkwbIA9hVLyb8IjGU",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "champion-reverse-weave-hoodie",
+      "name": "Champion Reverse Weave Hoodie",
+      "amount": 6999,
+      "productId": "prod_VeBkv5WnfyfuVZ",
+      "priceId": "price_1UctNKPnkwbIA9hVpcx7DvB2",
+      "action": "unchanged"
+    },
+    {
+      "itemKey": "dockers-alpha-khaki-chinos",
+      "name": "Dockers Alpha Khaki Chinos",
+      "amount": 5999,
+      "productId": "prod_VeBkIhn4Q9dEsI",
+      "priceId": "price_1UctNLPnkwbIA9hVvrMuAcD1",
+      "action": "unchanged"
+    }
+  ]
+}
