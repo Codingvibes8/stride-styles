@@ -1,32 +1,32 @@
-
 import HeroSection from "@/components/hero-section";
 import FeaturedProducts from "@/app/components/featured-products";
-import { createServerClient } from '@/lib/supabase';
-import { Product } from '@/lib/types';
+import { getFeaturedProducts } from "@/lib/db/queries";
+import { Product } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const supabase = createServerClient();
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('featured', true)
-    .returns<Product[]>();
+  let products: Product[] = [];
+  let hasError = false;
 
-  if (error) {
-    console.error('Error fetching featured products:', error);
+  try {
+    products = await getFeaturedProducts(4);
+  } catch (error) {
+    console.error("Error fetching featured products:", error);
+    hasError = true;
   }
 
   return (
     <div className="min-h-screen">
       <HeroSection />
-      {error && (
+      {hasError && (
         <div className="container mx-auto px-4 py-4">
           <div className="rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
             Featured products are temporarily unavailable. Please check back soon.
           </div>
         </div>
       )}
-      <FeaturedProducts products={products || []} />
+      <FeaturedProducts products={products} />
 
       {/* Categories Section */}
       <section className="py-16">
@@ -62,4 +62,3 @@ export default async function HomePage() {
     </div>
   )
 }
-

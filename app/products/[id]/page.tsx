@@ -1,6 +1,8 @@
-import { createServerClient } from "@/lib/supabase";
+import { getProductById } from "@/lib/db/queries";
 import { notFound } from "next/navigation";
 import ProductDetailClient from "./product-detail-client";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{
@@ -13,17 +15,10 @@ export default async function ProductPage({ params }: PageProps) {
   // Extract UUID from the slug-id string or use directly if it is just a UUID
   // Assuming ID is the last 36 characters (UUID length)
   const productId = id.length >= 36 ? id.slice(-36) : id;
-  
-  const supabase = createServerClient();
 
-  const { data: product, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", productId)
-    .single();
+  const product = await getProductById(productId);
 
-  if (error || !product) {
-    console.error("Error fetching product:", error);
+  if (!product) {
     notFound();
   }
 

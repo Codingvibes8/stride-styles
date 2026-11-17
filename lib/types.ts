@@ -27,12 +27,11 @@ export interface CartItem {
 
 export interface User {
   id: string
-  clerk_id: string
   email: string
-  first_name: string
-  last_name: string
-  created_at: string
-  updated_at: string
+  firstName: string
+  lastName: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Order {

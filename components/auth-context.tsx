@@ -1,56 +1,60 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react"
-import { createSupabaseBrowserClient } from "@/lib/supabase"
-import type { User, Session } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
+
+export interface AuthUser {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  createdAt: string
+}
 
 interface AuthContextType {
-  user: User | null
-  session: Session | null
+  user: AuthUser | null
   isLoading: boolean
+  refresh: () => Promise<void>
   signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  session: null,
   isLoading: true,
+  refresh: async () => {},
   signOut: async () => {},
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
 
-  const supabase = createSupabaseBrowserClient()
-
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
+  const refresh = useCallback(async () => {
+    try {
+      const response = await fetch("/api/auth/session", { cache: "no-store" })
+      const data = await response.json()
+      setUser(data.user ?? null)
+    } catch (error) {
+      console.error("Unable to load session:", error)
+      setUser(null)
+    } finally {
       setIsLoading(false)
-    })
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        setIsLoading(false)
-      }
-    )
-
-    return () => subscription.unsubscribe()
+    }
   }, [])
 
+  useEffect(() => {
+    void refresh()
+  }, [refresh])
+
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut()
-  }, [supabase])
+    await fetch("/api/auth/sign-out", { method: "POST" })
+    setUser(null)
+    router.refresh()
+  }, [router])
 
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, signOut }}>
+    <AuthContext.Provider value={{ user, isLoading, refresh, signOut }}>
       {children}
     </AuthContext.Provider>
   )

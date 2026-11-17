@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { createSupabaseBrowserClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,50 +16,33 @@ export default function SignUpPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const supabase = createSupabaseBrowserClient()
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setIsLoading(true)
 
-    // Sign up with Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          first_name: firstName,
-          last_name: lastName,
-        },
-      },
-    })
+    try {
+      const response = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, firstName, lastName }),
+      })
 
-    if (authError) {
-      setError(authError.message)
-      setIsLoading(false)
-      return
-    }
+      const data = await response.json()
 
-    // Insert user record into the users table
-    if (authData.user) {
-      const { error: insertError } = await supabase
-        .from("users")
-        .insert({
-          clerk_id: authData.user.id,
-          email: authData.user.email,
-          first_name: firstName,
-          last_name: lastName,
-        })
-
-      if (insertError) {
-        console.error("Error inserting user record:", insertError)
-        // Don't block sign-up if the insert fails — user is still authenticated
+      if (!response.ok) {
+        setError(data.error || "Unable to create your account.")
+        setIsLoading(false)
+        return
       }
-    }
 
-    router.push("/dashboard")
-    router.refresh()
+      router.push("/dashboard")
+      router.refresh()
+    } catch {
+      setError("Unable to reach the server. Please try again.")
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -121,8 +103,9 @@ export default function SignUpPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
               />
+              <p className="text-xs text-muted-foreground">At least 8 characters.</p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">

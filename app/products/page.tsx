@@ -1,40 +1,26 @@
-import { createServerClient } from "@/lib/supabase";
+import { getProducts } from "@/lib/db/queries";
+import { Product } from "@/lib/types";
 import ProductsPageClient from "./products-page-client";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ category?: string; sort?: string }>;
 }) {
-  const supabase = createServerClient();
   const params = await searchParams;
-  const category = params.category || "all";
   const sort = params.sort || "newest";
+  const category =
+    params.category === "shoes" || params.category === "clothing"
+      ? params.category
+      : undefined;
 
-  let query = supabase.from("products").select("*");
+  let products: Product[];
 
-  if (category && category !== "all") {
-    query = query.eq("category", category);
-  }
-
-  switch (sort) {
-    case "price-asc":
-      query = query.order("price", { ascending: true });
-      break;
-    case "price-desc":
-      query = query.order("price", { ascending: false });
-      break;
-    case "name":
-      query = query.order("name", { ascending: true });
-      break;
-    default:
-      query = query.order("created_at", { ascending: false });
-      break;
-  }
-
-  const { data: products, error } = await query;
-
-  if (error) {
+  try {
+    products = await getProducts({ category, sort });
+  } catch (error) {
     console.error("Error fetching products:", error);
     return <div>Error loading products.</div>;
   }

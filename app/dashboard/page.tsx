@@ -29,8 +29,8 @@ export default function DashboardPage() {
   }
 
   const userEmail = user.email || ""
-  const firstName = user.user_metadata?.first_name || ""
-  const lastName = user.user_metadata?.last_name || ""
+  const firstName = user.firstName || ""
+  const lastName = user.lastName || ""
   const displayName = firstName || userEmail
 
   return (
@@ -121,7 +121,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-              <p className="text-sm">{new Date(user.created_at).toLocaleDateString()}</p>
+              <p className="text-sm">{new Date(user.createdAt).toLocaleDateString()}</p>
             </div>
             <Button variant="outline" className="w-full">
               Edit Profile
